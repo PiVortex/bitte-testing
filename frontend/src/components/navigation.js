@@ -1,14 +1,14 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { useContext,useEffect, useState } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { useContext, useEffect, useState } from "react";
 
-import NearLogo from '/public/near-logo.svg';
-import { NearContext } from '@/wallets/near';
+import { NearContext } from "@/wallets/near";
+import NearLogo from "/public/near-logo.svg";
 
-export const Navigation = () => {
+const Navigation = () => {
   const { signedAccountId, wallet } = useContext(NearContext);
   const [action, setAction] = useState(() => {});
-  const [label, setLabel] = useState('Loading...');
+  const [label, setLabel] = useState("Loading...");
 
   useEffect(() => {
     if (!wallet) return;
@@ -18,7 +18,7 @@ export const Navigation = () => {
       setLabel(`Logout ${signedAccountId}`);
     } else {
       setAction(() => wallet.signIn);
-      setLabel('Login');
+      setLabel("Login");
     }
   }, [signedAccountId, wallet]);
 
@@ -26,7 +26,14 @@ export const Navigation = () => {
     <nav className="navbar navbar-expand-lg">
       <div className="container-fluid">
         <Link href="/" passHref legacyBehavior>
-          <Image priority src={NearLogo} alt="NEAR" width="30" height="24" className="d-inline-block align-text-top" />
+          <Image
+            priority
+            src={NearLogo}
+            alt="NEAR"
+            width="30"
+            height="24"
+            className="d-inline-block align-text-top"
+          />
         </Link>
         <div className="navbar-nav pt-1">
           <button className="btn btn-secondary" onClick={action}>
@@ -37,3 +44,5 @@ export const Navigation = () => {
     </nav>
   );
 };
+
+export default Navigation;

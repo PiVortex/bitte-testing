@@ -1,8 +1,8 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import styles from '@/styles/app.module.css';
+import styles from "@/styles/app.module.css";
 
-export const Cards = () => {
+const Cards = () => {
   return (
     <div className={styles.grid}>
       <Link
@@ -17,7 +17,11 @@ export const Cards = () => {
         <p>Learn how this application works, and what you can build on Near.</p>
       </Link>
 
-      <Link href="/hello-near" className={styles.card} rel="noopener noreferrer">
+      <Link
+        href="/hello-near"
+        className={styles.card}
+        rel="noopener noreferrer"
+      >
         <h2>
           Near Integration <span>-&gt;</span>
         </h2>
@@ -26,3 +30,5 @@ export const Cards = () => {
     </div>
   );
 };
+
+export default Cards;

@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from "react";
 
-import { Cards } from '@/components/cards';
-import styles from '@/styles/app.module.css';
-import { NearContext } from '@/wallets/near';
+import styles from "@/styles/app.module.css";
+import { NearContext } from "@/wallets/near";
+import { BitteAiChat } from "@bitte-ai/chat";
 
-import { HelloNearContract } from '../../config';
-import {BitteAiChat} from "@bitte-ai/chat";
+import { HelloNearContract } from "../../config";
+import Cards from "../../components/cards";
 
 // Contract that the app will interact with
 const CONTRACT = HelloNearContract;
@@ -15,15 +15,17 @@ const CONTRACT = HelloNearContract;
 export default function HelloNear() {
   const { signedAccountId, wallet } = useContext(NearContext);
 
-  const [greeting, setGreeting] = useState('loading...');
-  const [newGreeting, setNewGreeting] = useState('loading...');
+  const [greeting, setGreeting] = useState("loading...");
+  const [newGreeting, setNewGreeting] = useState("loading...");
   const [loggedIn, setLoggedIn] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
 
   useEffect(() => {
     if (!wallet) return;
 
-    wallet.viewMethod({ contractId: CONTRACT, method: 'get_greeting' }).then((greeting) => setGreeting(greeting));
+    wallet
+      .viewMethod({ contractId: CONTRACT, method: "get_greeting" })
+      .then((greeting) => setGreeting(greeting));
   }, [wallet]);
 
   useEffect(() => {
@@ -31,14 +33,22 @@ export default function HelloNear() {
   }, [signedAccountId]);
 
   const saveGreeting = async () => {
-    wallet.callMethod({ contractId: CONTRACT, method: 'set_greeting', args: { greeting: newGreeting } })
+    wallet
+      .callMethod({
+        contractId: CONTRACT,
+        method: "set_greeting",
+        args: { greeting: newGreeting },
+      })
       .then(async () => {
-        const greeting = await wallet.viewMethod({ contractId: CONTRACT, method: 'get_greeting' });
+        const greeting = await wallet.viewMethod({
+          contractId: CONTRACT,
+          method: "get_greeting",
+        });
         setGreeting(greeting);
       });
 
     setShowSpinner(true);
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
     setGreeting(newGreeting);
     setShowSpinner(false);
   };
@@ -66,7 +76,10 @@ export default function HelloNear() {
           <div className="input-group-append">
             <button className="btn btn-secondary" onClick={saveGreeting}>
               <span hidden={showSpinner}> Save </span>
-              <i className="spinner-border spinner-border-sm" hidden={!showSpinner}></i>
+              <i
+                className="spinner-border spinner-border-sm"
+                hidden={!showSpinner}
+              ></i>
             </button>
           </div>
         </div>
@@ -74,10 +87,7 @@ export default function HelloNear() {
           <p className="m-0"> Please login to change the greeting </p>
         </div>
         <div>
-        <BitteAiChat  
-          agentid="your-agent-id"
-          apiUrl="/api/chat"
-      />
+          <BitteAiChat agentid="your-agent-id" apiUrl="/api/chat" />
         </div>
       </div>
       <Cards />
