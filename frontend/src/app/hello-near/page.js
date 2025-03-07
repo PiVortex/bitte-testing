@@ -89,7 +89,7 @@ export default function HelloNear() {
         <div>
         </div>
       </div>
-      <BitteAiChat agentid="your-agent-id" apiUrl="/api/chat" />
+      <BitteAiChat agentId={"meme-cooking-bitte-agent.vercel.app"} apiUrl={"/api/chat"} />
     </main>
   );
 }
