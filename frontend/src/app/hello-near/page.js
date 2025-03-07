@@ -7,7 +7,6 @@ import { NearContext } from "@/wallets/near";
 import { BitteAiChat } from "@bitte-ai/chat";
 
 import { HelloNearContract } from "../../config";
-import Cards from "../../components/cards";
 
 // Contract that the app will interact with
 const CONTRACT = HelloNearContract;
@@ -89,7 +88,7 @@ export default function HelloNear() {
         <div>
         </div>
       </div>
-      <BitteAiChat agentId={"meme-cooking-bitte-agent.vercel.app"} apiUrl={"/api/chat"} />
+      <BitteAiChat agentId={"vex-agent.vercel.app"} apiUrl={"/api/chat"} wallet={{ near: { wallet } }} />
     </main>
   );
 }
