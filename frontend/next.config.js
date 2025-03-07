@@ -5,9 +5,15 @@ const nextConfig = {
     unoptimized: true,
   },
   basePath: isProduction ? '/hello-near-examples' : '',
-  output: "export",
   distDir: 'build',
   reactStrictMode: true,
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': require('path').resolve(__dirname, 'src'),
+    };
+    return config;
+  },
 }
 
 module.exports = nextConfig;
