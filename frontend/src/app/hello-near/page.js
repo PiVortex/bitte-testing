@@ -87,10 +87,9 @@ export default function HelloNear() {
           <p className="m-0"> Please login to change the greeting </p>
         </div>
         <div>
-          <BitteAiChat agentid="your-agent-id" apiUrl="/api/chat" />
         </div>
       </div>
-      <Cards />
+      <BitteAiChat agentid="your-agent-id" apiUrl="/api/chat" />
     </main>
   );
 }
