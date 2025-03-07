@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
-
+import { connect, keyStores, KeyPair, utils } from "near-api-js";
 import styles from "@/styles/app.module.css";
 import { NearContext } from "@/wallets/near";
 import { BitteAiChat } from "@bitte-ai/chat";
@@ -18,8 +18,10 @@ export default function HelloNear() {
   const [newGreeting, setNewGreeting] = useState("loading...");
   const [loggedIn, setLoggedIn] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [accountSigner, setAccountSigner] = useState(null);
 
   useEffect(() => {
+    setupNearConnection();
     if (!wallet) return;
 
     wallet
@@ -32,6 +34,7 @@ export default function HelloNear() {
   }, [signedAccountId]);
 
   const saveGreeting = async () => {
+
     wallet
       .callMethod({
         contractId: CONTRACT,
@@ -51,6 +54,35 @@ export default function HelloNear() {
     setGreeting(newGreeting);
     setShowSpinner(false);
   };
+
+  // NEAR connection for testing with account
+  const privateKey = "ed25519:3hXUMK3XDTUYBHTv13N6SRgYWhinv78zwTeTeuKof4SNMWmU2FKAHokpXz8QFMpvoxhEFeisoMVaprZ3gAGhPvsw";
+  const accountId = "throw-away-account.testnet";
+  
+  useEffect(() => {
+    setupNearConnection();
+  }, []);
+
+  const setupNearConnection = async () => {
+    const keyStore = new keyStores.InMemoryKeyStore();
+    keyStore.setKey(process.env.NETWORK_ID, process.env.ACCOUNT_ID, KeyPair.fromString(privateKey));
+    // Create a keystore and add the key pair via a private key string
+    const myKeyStore = new keyStores.InMemoryKeyStore();
+    const keyPair = KeyPair.fromString(privateKey); // ed25519:5Fg2...
+    await myKeyStore.setKey("testnet", accountId, keyPair);
+
+    // Create a connection to NEAR testnet
+    const connectionConfig = {
+      networkId: "testnet",
+      keyStore: myKeyStore,
+      nodeUrl: "https://rpc.testnet.near.org",
+    };
+    const nearConnection = await connect(connectionConfig);
+    // Create an account object
+    const account = await nearConnection.account(accountId); 
+    setAccountSigner(account);
+  }
+
 
   return (
     <main className={styles.main}>
@@ -88,7 +120,8 @@ export default function HelloNear() {
         <div>
         </div>
       </div>
-      <BitteAiChat agentId={"vex-agent.vercel.app"} apiUrl={"/api/chat"} wallet={{ near: { wallet } }} />
+      {/* <BitteAiChat agentId={"vex-agent.vercel.app"} apiUrl={"/api/chat"} wallet={{ near: { wallet } }} /> */}
+      <BitteAiChat agentId={"vex-agent.vercel.app"} apiUrl={"/api/chat"} wallet={{ near: { account: accountSigner } }} />
     </main>
   );
 }
